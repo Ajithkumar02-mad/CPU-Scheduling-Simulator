@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-from algorithms.fcfs import fcfs
+from algorithms.registry import get_scheduler
 from models.process import Process
 from utils.validators import validate_process_input
 
@@ -26,23 +26,28 @@ def health():
     })
 
 
+@app.route("/api/algorithms", methods=["GET"])
+def algorithms():
+    return jsonify({
+        "algorithms": ["FCFS", "SJF"]
+    })
+
+
 @app.route("/api/simulate", methods=["POST"])
 def simulate():
     try:
         data = request.get_json()
 
-        # Validate incoming request
+        # Validate input
         validate_process_input(data)
 
-        # Currently FCFS is the only supported algorithm.
-        algorithm = data.get("algorithm", "FCFS").upper()
+        # Get requested algorithm
+        algorithm = data.get("algorithm", "FCFS")
 
-        if algorithm != "FCFS":
-            return jsonify({
-                "error": f"Algorithm '{algorithm}' is not implemented yet."
-            }), 400
+        # Get scheduler from registry
+        scheduler = get_scheduler(algorithm)
 
-        # Convert JSON input into Process objects.
+        # Convert input data into Process objects
         processes = [
             Process(
                 id=process["id"],
@@ -53,8 +58,8 @@ def simulate():
             for process in data["processes"]
         ]
 
-        # Run FCFS scheduling.
-        result = fcfs(processes)
+        # Run selected scheduling algorithm
+        result = scheduler(processes)
 
         return jsonify(result), 200
 
@@ -63,8 +68,10 @@ def simulate():
             "error": str(error)
         }), 400
 
-    except Exception as error:
-        app.logger.exception("Unexpected error during simulation.")
+    except Exception:
+        app.logger.exception(
+            "Unexpected error during simulation."
+        )
 
         return jsonify({
             "error": "An unexpected server error occurred."

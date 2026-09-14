@@ -51,6 +51,54 @@ def test_fcfs_simulation():
     assert data["processes"][1]["completion_time"] == 8
 
 
+def test_sjf_simulation():
+    client = app.test_client()
+
+    payload = {
+        "algorithm": "SJF",
+        "processes": [
+            {
+                "id": "P1",
+                "arrival_time": 0,
+                "burst_time": 7
+            },
+            {
+                "id": "P2",
+                "arrival_time": 2,
+                "burst_time": 4
+            },
+            {
+                "id": "P3",
+                "arrival_time": 3,
+                "burst_time": 2
+            },
+            {
+                "id": "P4",
+                "arrival_time": 4,
+                "burst_time": 1
+            }
+        ]
+    }
+
+    response = client.post(
+        "/api/simulate",
+        json=payload
+    )
+
+    assert response.status_code == 200
+
+    data = response.get_json()
+
+    assert data["algorithm"] == "SJF"
+    assert len(data["processes"]) == 4
+    assert len(data["gantt_chart"]) == 4
+
+    assert data["processes"][0]["completion_time"] == 7
+    assert data["processes"][1]["completion_time"] == 8
+    assert data["processes"][2]["completion_time"] == 10
+    assert data["processes"][3]["completion_time"] == 14
+
+
 def test_invalid_burst_time():
     client = app.test_client()
 
@@ -77,7 +125,7 @@ def test_unsupported_algorithm():
     client = app.test_client()
 
     payload = {
-        "algorithm": "SJF",
+        "algorithm": "ROUND_ROBIN",
         "processes": [
             {
                 "id": "P1",
@@ -93,3 +141,8 @@ def test_unsupported_algorithm():
     )
 
     assert response.status_code == 400
+
+    data = response.get_json()
+
+    assert "error" in data
+    assert "ROUND_ROBIN" in data["error"]
