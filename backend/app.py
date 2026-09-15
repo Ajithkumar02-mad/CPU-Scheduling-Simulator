@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-from algorithms.registry import get_scheduler
+from algorithms.registry import get_scheduler, SCHEDULERS
 from models.process import Process
 from utils.validators import validate_process_input
 
@@ -29,7 +29,7 @@ def health():
 @app.route("/api/algorithms", methods=["GET"])
 def algorithms():
     return jsonify({
-        "algorithms": ["FCFS", "SJF"]
+        "algorithms": list(SCHEDULERS.keys())
     })
 
 

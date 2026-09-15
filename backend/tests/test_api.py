@@ -98,6 +98,61 @@ def test_sjf_simulation():
     assert data["processes"][2]["completion_time"] == 10
     assert data["processes"][3]["completion_time"] == 14
 
+def test_srtf_simulation():
+    client = app.test_client()
+
+    payload = {
+        "algorithm": "SRTF",
+        "processes": [
+            {
+                "id": "P1",
+                "arrival_time": 0,
+                "burst_time": 8
+            },
+            {
+                "id": "P2",
+                "arrival_time": 2,
+                "burst_time": 3
+            }
+        ]
+    }
+
+    response = client.post(
+        "/api/simulate",
+        json=payload
+    )
+
+    assert response.status_code == 200
+
+    data = response.get_json()
+
+    assert data["algorithm"] == "SRTF"
+
+    assert data["gantt_chart"] == [
+        {
+            "process": "P1",
+            "start": 0,
+            "end": 2
+        },
+        {
+            "process": "P2",
+            "start": 2,
+            "end": 5
+        },
+        {
+            "process": "P1",
+            "start": 5,
+            "end": 11
+        }
+    ]
+
+    completion_times = {
+        process["id"]: process["completion_time"]
+        for process in data["processes"]
+    }
+
+    assert completion_times["P1"] == 11
+    assert completion_times["P2"] == 5
 
 def test_invalid_burst_time():
     client = app.test_client()

@@ -1,10 +1,12 @@
 from algorithms.fcfs import fcfs
 from algorithms.sjf import sjf
+from algorithms.srtf import srtf
 
 
 SCHEDULERS = {
     "FCFS": fcfs,
     "SJF": sjf,
+    "SRTF": srtf,
 }
 
 
