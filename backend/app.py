@@ -59,7 +59,32 @@ def simulate():
         ]
 
         # Run selected scheduling algorithm
-        result = scheduler(processes)
+        if algorithm.strip().upper() == "ROUND_ROBIN":
+
+            time_quantum = data.get("time_quantum")
+
+            if time_quantum is None:
+                raise ValueError(
+                    "Time quantum is required for Round Robin."
+                )
+
+            if not isinstance(time_quantum, int):
+                raise ValueError(
+                    "Time quantum must be an integer."
+                )
+
+            if time_quantum <= 0:
+                raise ValueError(
+                    "Time quantum must be greater than 0."
+                )
+
+            result = scheduler(
+                processes,
+                time_quantum
+            )
+
+        else:
+            result = scheduler(processes)
 
         return jsonify(result), 200
 

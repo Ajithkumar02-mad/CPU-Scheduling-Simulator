@@ -24,4 +24,4 @@ def test_algorithm_name_is_case_insensitive():
 
 def test_unsupported_algorithm():
     with pytest.raises(ValueError):
-        get_scheduler("ROUND_ROBIN")
+        get_scheduler("PRIORITY")

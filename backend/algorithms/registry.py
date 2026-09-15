@@ -1,12 +1,14 @@
 from algorithms.fcfs import fcfs
 from algorithms.sjf import sjf
 from algorithms.srtf import srtf
+from algorithms.round_robin import round_robin
 
 
 SCHEDULERS = {
     "FCFS": fcfs,
     "SJF": sjf,
     "SRTF": srtf,
+    "ROUND_ROBIN": round_robin,
 }
 
 
