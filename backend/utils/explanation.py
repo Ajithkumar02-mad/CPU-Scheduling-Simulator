@@ -1,108 +1,135 @@
 def generate_solution_steps(algorithm, processes, gantt_chart):
     """
-    Generate problem-specific, step-by-step explanations.
-
-    Supports both:
-    - Process dataclass objects
-    - Dictionary process results
+    Generate simple, beginner-friendly explanations
+    for the actual scheduling problem.
     """
 
-    steps = []
-
     if not processes or not gantt_chart:
-        return steps
+        return []
 
     algorithm = algorithm.strip().upper()
 
     # --------------------------------------------------
     # NORMALIZE PROCESS DATA
     # --------------------------------------------------
-    # Convert every Process object or dictionary into
-    # one consistent dictionary format.
-    # --------------------------------------------------
 
-    normalized_processes = []
+    normalized = []
 
     for process in processes:
 
         if isinstance(process, dict):
-            normalized_processes.append({
+            normalized.append({
                 "id": process["id"],
                 "arrival_time": process["arrival_time"],
                 "burst_time": process["burst_time"],
                 "priority": process.get("priority", 0),
                 "completion_time": process.get(
                     "completion_time"
-                ),
+                )
             })
 
         else:
-            normalized_processes.append({
+            normalized.append({
                 "id": process.id,
                 "arrival_time": process.arrival_time,
                 "burst_time": process.burst_time,
                 "priority": process.priority,
-                "completion_time": process.completion_time,
+                "completion_time": process.completion_time
             })
 
-    processes = normalized_processes
-
-    # --------------------------------------------------
-    # PROCESS LOOKUP
-    # --------------------------------------------------
+    processes = normalized
 
     process_map = {
-        process["id"]: process
-        for process in processes
+        p["id"]: p
+        for p in processes
     }
 
-    sorted_processes = sorted(
-        processes,
-        key=lambda process: (
-            process["arrival_time"],
-            process["id"]
-        )
-    )
-
     # --------------------------------------------------
-    # HELPER: AVAILABLE PROCESSES
+    # HELPERS
     # --------------------------------------------------
 
-    def get_available_processes(time, exclude=None):
-
+    def available_at(time):
         return [
-            process
-            for process in sorted_processes
-            if (
-                process["arrival_time"] <= time
-                and process["id"] != exclude
-            )
+            p for p in processes
+            if p["arrival_time"] <= time
         ]
 
-    # --------------------------------------------------
-    # HELPER: REMAINING TIME
-    # --------------------------------------------------
-
-    def get_remaining_time(process, segment_index):
-
-        executed = 0
+    def executed_before(process_id, segment_index):
+        total = 0
 
         for segment in gantt_chart[:segment_index]:
 
-            if segment["process"] == process["id"]:
-
-                executed += (
+            if segment["process"] == process_id:
+                total += (
                     segment["end"]
                     - segment["start"]
                 )
 
+        return total
+
+    def remaining_time(process, segment_index):
         return max(
             0,
-            process["burst_time"] - executed
+            process["burst_time"]
+            - executed_before(
+                process["id"],
+                segment_index
+            )
         )
 
+    def add_step(
+        time,
+        step_type,
+        title,
+        process,
+        explanation
+    ):
+        steps.append({
+            "step": len(steps) + 1,
+            "time": time,
+            "type": step_type,
+            "title": title,
+            "process": process,
+            "explanation": explanation
+        })
+
+    steps = []
+
     # --------------------------------------------------
-    # PROCESS GANTT SEGMENTS
+    # INTRODUCTION
+    # --------------------------------------------------
+
+    algorithm_names = {
+        "FCFS": "First Come First Serve",
+        "SJF": "Shortest Job First",
+        "SRTF": "Shortest Remaining Time First",
+        "ROUND_ROBIN": "Round Robin",
+        "PRIORITY_NON_PREEMPTIVE":
+            "Priority Scheduling (Non-Preemptive)",
+        "PRIORITY_PREEMPTIVE":
+            "Priority Scheduling (Preemptive)"
+    }
+
+    algorithm_name = algorithm_names.get(
+        algorithm,
+        algorithm
+    )
+
+    add_step(
+        0,
+        "INTRODUCTION",
+        "Problem setup",
+        None,
+        (
+            f"We have {len(processes)} processes to "
+            f"schedule using {algorithm_name}. "
+            f"The scheduler will decide which process "
+            f"gets the CPU at each point in time."
+        )
+    )
+
+    # --------------------------------------------------
+    # PROCESS EXECUTION
     # --------------------------------------------------
 
     for index, segment in enumerate(gantt_chart):
@@ -119,48 +146,42 @@ def generate_solution_steps(algorithm, processes, gantt_chart):
 
             next_process = None
 
-            for process in sorted_processes:
+            for process in processes:
 
                 if process["arrival_time"] > start:
 
-                    next_process = process
-                    break
+                    if (
+                        next_process is None
+                        or process["arrival_time"]
+                        < next_process["arrival_time"]
+                    ):
+                        next_process = process
 
             if next_process:
 
-                steps.append({
-                    "step": len(steps) + 1,
-                    "time": start,
-                    "type": "CPU_IDLE",
-                    "title": (
-                        f"CPU is idle at time {start}"
-                    ),
-                    "process": "IDLE",
-                    "explanation": (
-                        f"No process has arrived by time "
-                        f"{start}. Therefore, the CPU remains "
-                        f"idle until {next_process['id']} "
-                        f"arrives at time "
+                add_step(
+                    start,
+                    "CPU_IDLE",
+                    "CPU is idle",
+                    "IDLE",
+                    (
+                        f"At time {start}, no process is "
+                        f"ready to run. "
+                        f"The CPU has nothing to execute. "
+                        f"{next_process['id']} will arrive "
+                        f"at time "
                         f"{next_process['arrival_time']}."
                     )
-                })
+                )
 
             continue
 
-        process = process_map.get(process_id)
+        process = process_map[process_id]
 
-        if process is None:
-            continue
-
-        # --------------------------------------------------
-        # PREVIOUS PROCESS
-        # --------------------------------------------------
-
-        previous_process_id = None
+        previous_id = None
 
         if index > 0:
-
-            previous_process_id = gantt_chart[
+            previous_id = gantt_chart[
                 index - 1
             ]["process"]
 
@@ -170,43 +191,31 @@ def generate_solution_steps(algorithm, processes, gantt_chart):
 
         if algorithm == "FCFS":
 
-            if previous_process_id != process_id:
+            if previous_id != process_id:
 
-                available = get_available_processes(
-                    start
-                )
+                available = available_at(start)
 
-                available_text = ", ".join(
-                    p["id"]
+                arrival_text = ", ".join(
+                    f"{p['id']} (AT={p['arrival_time']})"
                     for p in available
                 )
 
-                selected = min(
-                    available,
-                    key=lambda p: (
-                        p["arrival_time"],
-                        p["id"]
+                add_step(
+                    start,
+                    "PROCESS_SELECTION",
+                    f"{process_id} gets the CPU",
+                    process_id,
+                    (
+                        f"At time {start}, the processes "
+                        f"that have arrived are: "
+                        f"{arrival_text}. "
+                        f"FCFS chooses the process that "
+                        f"arrived first. "
+                        f"{process_id} has arrival time "
+                        f"{process['arrival_time']}, so it "
+                        f"is selected."
                     )
                 )
-
-                steps.append({
-                    "step": len(steps) + 1,
-                    "time": start,
-                    "type": "PROCESS_SELECTION",
-                    "title": (
-                        f"{process_id} is selected"
-                    ),
-                    "process": process_id,
-                    "explanation": (
-                        f"At time {start}, the available "
-                        f"processes are {available_text}. "
-                        f"{selected['id']} arrived at time "
-                        f"{selected['arrival_time']}, which "
-                        f"is the earliest arrival among the "
-                        f"available processes. Therefore, "
-                        f"FCFS selects {selected['id']}."
-                    )
-                })
 
         # ==================================================
         # SJF
@@ -214,14 +223,12 @@ def generate_solution_steps(algorithm, processes, gantt_chart):
 
         elif algorithm == "SJF":
 
-            if previous_process_id != process_id:
+            if previous_id != process_id:
 
-                available = get_available_processes(
-                    start
-                )
+                available = available_at(start)
 
-                burst_values = ", ".join(
-                    f"{p['id']} = {p['burst_time']}"
+                burst_text = ", ".join(
+                    f"{p['id']} (BT={p['burst_time']})"
                     for p in available
                 )
 
@@ -234,25 +241,22 @@ def generate_solution_steps(algorithm, processes, gantt_chart):
                     )
                 )
 
-                steps.append({
-                    "step": len(steps) + 1,
-                    "time": start,
-                    "type": "PROCESS_SELECTION",
-                    "title": (
-                        f"{process_id} is selected"
-                    ),
-                    "process": process_id,
-                    "explanation": (
+                add_step(
+                    start,
+                    "PROCESS_SELECTION",
+                    f"{process_id} gets the CPU",
+                    process_id,
+                    (
                         f"At time {start}, the available "
-                        f"processes have burst times: "
-                        f"{burst_values}. "
+                        f"processes are: {burst_text}. "
+                        f"SJF looks at their burst times. "
                         f"{selected['id']} has the shortest "
-                        f"burst time "
-                        f"({selected['burst_time']}). "
-                        f"Therefore, SJF selects "
-                        f"{selected['id']}."
+                        f"burst time of "
+                        f"{selected['burst_time']} units. "
+                        f"Therefore, {selected['id']} is "
+                        f"selected."
                     )
-                })
+                )
 
         # ==================================================
         # SRTF
@@ -260,90 +264,111 @@ def generate_solution_steps(algorithm, processes, gantt_chart):
 
         elif algorithm == "SRTF":
 
-            available = get_available_processes(
-                start
-            )
+            available = available_at(start)
 
-            remaining_values = []
+            comparisons = []
 
             for candidate in available:
 
-                remaining = get_remaining_time(
+                remaining = remaining_time(
                     candidate,
                     index
                 )
 
-                remaining_values.append(
-                    (candidate, remaining)
-                )
-
-            if remaining_values:
-
-                selected = min(
-                    remaining_values,
-                    key=lambda item: (
-                        item[1],
-                        item[0]["arrival_time"],
-                        item[0]["id"]
-                    )
-                )
-
-                comparison = ", ".join(
+                comparisons.append(
                     f"{candidate['id']} = {remaining}"
-                    for candidate, remaining
-                    in remaining_values
                 )
 
-                if (
-                    previous_process_id
-                    and previous_process_id != process_id
-                    and previous_process_id != "IDLE"
-                ):
+            comparison_text = ", ".join(
+                comparisons
+            )
 
-                    steps.append({
-                        "step": len(steps) + 1,
-                        "time": start,
-                        "type": "PREEMPTION",
-                        "title": (
-                            f"{process_id} preempts "
-                            f"{previous_process_id}"
-                        ),
-                        "process": process_id,
-                        "explanation": (
-                            f"At time {start}, the available "
-                            f"processes have remaining times: "
-                            f"{comparison}. "
-                            f"{process_id} has the shortest "
-                            f"remaining time "
-                            f"({selected[1]}). "
-                            f"Therefore, SRTF selects "
-                            f"{process_id} and "
-                            f"{previous_process_id} is "
-                            f"preempted."
+            selected = min(
+                available,
+                key=lambda p: (
+                    remaining_time(p, index),
+                    p["arrival_time"],
+                    p["id"]
+                )
+            )
+
+            # Preemption
+            if (
+                previous_id
+                and previous_id != process_id
+                and previous_id != "IDLE"
+            ):
+
+                previous_process = process_map[
+                    previous_id
+                ]
+
+                previous_remaining = remaining_time(
+                    previous_process,
+                    index
+                )
+
+                current_remaining = remaining_time(
+                    process,
+                    index
+                )
+
+                if current_remaining < previous_remaining:
+
+                    add_step(
+                        start,
+                        "PREEMPTION",
+                        f"{process_id} preempts {previous_id}",
+                        process_id,
+                        (
+                            f"At time {start}, {process_id} "
+                            f"has arrived and the CPU compares "
+                            f"the remaining times. "
+                            f"{previous_id} has "
+                            f"{previous_remaining} units "
+                            f"remaining, while {process_id} "
+                            f"needs only "
+                            f"{current_remaining} units. "
+                            f"Since SRTF chooses the process "
+                            f"with the shortest remaining "
+                            f"time, {process_id} gets the CPU "
+                            f"and {previous_id} stops."
                         )
-                    })
+                    )
 
                 else:
 
-                    steps.append({
-                        "step": len(steps) + 1,
-                        "time": start,
-                        "type": "PROCESS_SELECTION",
-                        "title": (
-                            f"{process_id} is selected"
-                        ),
-                        "process": process_id,
-                        "explanation": (
-                            f"At time {start}, the available "
-                            f"processes have remaining times: "
-                            f"{comparison}. "
-                            f"{process_id} has the shortest "
-                            f"remaining time "
-                            f"({selected[1]}). "
-                            f"Therefore, SRTF selects "
-                            f"{process_id}."
+                    add_step(
+                        start,
+                        "PROCESS_SELECTION",
+                        f"{process_id} continues",
+                        process_id,
+                        (
+                            f"At time {start}, the CPU checks "
+                            f"the remaining times: "
+                            f"{comparison_text}. "
+                            f"{process_id} still has the "
+                            f"shortest remaining time, so "
+                            f"it continues running."
                         )
-                    })
+                    )
+
+            else:
+
+                add_step(
+                    start,
+                    "PROCESS_SELECTION",
+                    f"{process_id} gets the CPU",
+                    process_id,
+                    (
+                        f"At time {start}, the available "
+                        f"processes have remaining times: "
+                        f"{comparison_text}. "
+                        f"{process_id} has the shortest "
+                        f"remaining time, so SRTF selects "
+                        f"{process_id}."
+                    )
+                )
 
         # ==================================================
         # ROUND ROBIN
@@ -351,48 +376,40 @@ def generate_solution_steps(algorithm, processes, gantt_chart):
 
         elif algorithm == "ROUND_ROBIN":
 
-            duration = end - start
+            if previous_id != process_id:
 
-            if duration <= 0:
-                continue
+                duration = end - start
 
-            if previous_process_id != process_id:
+                if previous_id and previous_id != "IDLE":
 
-                if previous_process_id:
-
-                    explanation = (
-                        f"At time {start}, the CPU switches "
-                        f"to {process_id}. Round Robin gives "
-                        f"each ready process a turn using the "
-                        f"configured time quantum. "
-                        f"{process_id} executes from "
-                        f"{start} to {end}."
+                    add_step(
+                        start,
+                        "CONTEXT_SWITCH",
+                        f"{process_id} gets the CPU",
+                        process_id,
+                        (
+                            f"{previous_id}'s turn has ended. "
+                            f"The scheduler moves to the "
+                            f"next ready process. "
+                            f"{process_id} now gets the CPU "
+                            f"for its turn."
+                        )
                     )
-
-                    event_type = "CONTEXT_SWITCH"
 
                 else:
 
-                    explanation = (
-                        f"At time {start}, {process_id} "
-                        f"is ready and receives the CPU. "
-                        f"Round Robin allows the process "
-                        f"to execute for its time quantum "
-                        f"or until it finishes."
+                    add_step(
+                        start,
+                        "PROCESS_SELECTION",
+                        f"{process_id} starts",
+                        process_id,
+                        (
+                            f"At time {start}, "
+                            f"{process_id} is ready. "
+                            f"Round Robin gives it a turn "
+                            f"to use the CPU."
+                        )
                     )
-
-                    event_type = "PROCESS_SELECTION"
-
-                steps.append({
-                    "step": len(steps) + 1,
-                    "time": start,
-                    "type": event_type,
-                    "title": (
-                        f"{process_id} gets the CPU"
-                    ),
-                    "process": process_id,
-                    "explanation": explanation
-                })
 
         # ==================================================
         # PRIORITY NON-PREEMPTIVE
@@ -400,14 +417,12 @@ def generate_solution_steps(algorithm, processes, gantt_chart):
 
         elif algorithm == "PRIORITY_NON_PREEMPTIVE":
 
-            if previous_process_id != process_id:
+            if previous_id != process_id:
 
-                available = get_available_processes(
-                    start
-                )
+                available = available_at(start)
 
-                priority_values = ", ".join(
-                    f"{p['id']} = {p['priority']}"
+                priority_text = ", ".join(
+                    f"{p['id']} (Priority={p['priority']})"
                     for p in available
                 )
 
@@ -420,26 +435,21 @@ def generate_solution_steps(algorithm, processes, gantt_chart):
                     )
                 )
 
-                steps.append({
-                    "step": len(steps) + 1,
-                    "time": start,
-                    "type": "PROCESS_SELECTION",
-                    "title": (
-                        f"{process_id} is selected"
-                    ),
-                    "process": process_id,
-                    "explanation": (
+                add_step(
+                    start,
+                    "PROCESS_SELECTION",
+                    f"{process_id} gets the CPU",
+                    process_id,
+                    (
                         f"At time {start}, the available "
-                        f"processes have priorities: "
-                        f"{priority_values}. "
+                        f"processes are: {priority_text}. "
+                        f"Here, a smaller priority number "
+                        f"means higher priority. "
                         f"{selected['id']} has priority "
-                        f"{selected['priority']}. "
-                        f"In this simulator, a smaller "
-                        f"priority number means higher "
-                        f"priority. Therefore, "
-                        f"{selected['id']} is selected."
+                        f"{selected['priority']}, so it is "
+                        f"selected."
                     )
-                })
+                )
 
         # ==================================================
         # PRIORITY PREEMPTIVE
@@ -447,11 +457,9 @@ def generate_solution_steps(algorithm, processes, gantt_chart):
 
         elif algorithm == "PRIORITY_PREEMPTIVE":
 
-            available = get_available_processes(
-                start
-            )
+            available = available_at(start)
 
-            priority_values = ", ".join(
+            priority_text = ", ".join(
                 f"{p['id']} = {p['priority']}"
                 for p in available
             )
@@ -466,90 +474,123 @@ def generate_solution_steps(algorithm, processes, gantt_chart):
             )
 
             if (
-                previous_process_id
-                and previous_process_id != process_id
-                and previous_process_id != "IDLE"
+                previous_id
+                and previous_id != process_id
+                and previous_id != "IDLE"
             ):
 
-                previous_process = process_map.get(
-                    previous_process_id
-                )
+                previous_process = process_map[
+                    previous_id
+                ]
 
-                steps.append({
-                    "step": len(steps) + 1,
-                    "time": start,
-                    "type": "PREEMPTION",
-                    "title": (
-                        f"{process_id} preempts "
-                        f"{previous_process_id}"
-                    ),
-                    "process": process_id,
-                    "explanation": (
-                        f"At time {start}, the available "
-                        f"processes have priorities: "
-                        f"{priority_values}. "
-                        f"{process_id} has priority "
-                        f"{process['priority']}, while "
-                        f"{previous_process_id} has priority "
-                        f"{previous_process['priority']}. "
-                        f"Because a smaller priority number "
-                        f"means higher priority, "
-                        f"{process_id} preempts "
-                        f"{previous_process_id}."
+                if (
+                    process["priority"]
+                    < previous_process["priority"]
+                ):
+
+                    add_step(
+                        start,
+                        "PREEMPTION",
+                        (
+                            f"{process_id} preempts "
+                            f"{previous_id}"
+                        ),
+                        process_id,
+                        (
+                            f"At time {start}, {process_id} "
+                            f"becomes available. "
+                            f"Compare their priorities:\n"
+                            f"• {process_id} → "
+                            f"{process['priority']}\n"
+                            f"• {previous_id} → "
+                            f"{previous_process['priority']}\n\n"
+                            f"Smaller number means higher "
+                            f"priority. "
+                            f"Therefore, {process_id} has "
+                            f"higher priority and takes "
+                            f"the CPU."
+                        )
                     )
-                })
+
+                else:
+
+                    add_step(
+                        start,
+                        "PROCESS_SELECTION",
+                        f"{process_id} gets the CPU",
+                        process_id,
+                        (
+                            f"At time {start}, the scheduler "
+                            f"checks the available priorities: "
+                            f"{priority_text}. "
+                            f"{process_id} has the highest "
+                            f"priority, so it is selected."
+                        )
+                    )
 
             else:
 
-                steps.append({
-                    "step": len(steps) + 1,
-                    "time": start,
-                    "type": "PROCESS_SELECTION",
-                    "title": (
-                        f"{process_id} is selected"
-                    ),
-                    "process": process_id,
-                    "explanation": (
+                add_step(
+                    start,
+                    "PROCESS_SELECTION",
+                    f"{process_id} gets the CPU",
+                    process_id,
+                    (
                         f"At time {start}, the available "
                         f"processes have priorities: "
-                        f"{priority_values}. "
-                        f"{process_id} has priority "
-                        f"{process['priority']}, which is "
-                        f"the highest priority because the "
-                        f"priority number is the smallest. "
-                        f"Therefore, {process_id} is selected."
+                        f"{priority_text}. "
+                        f"{process_id} has the highest "
+                        f"priority because its priority "
+                        f"number is the smallest. "
+                        f"Therefore, it gets the CPU."
                     )
-                })
+                )
 
-    # ======================================================
+    # --------------------------------------------------
     # COMPLETION STEPS
-    # ======================================================
+    # --------------------------------------------------
 
-    for process in sorted_processes:
+    completion_steps = []
 
-        completion_time = process.get(
-            "completion_time"
-        )
+    for process in processes:
+
+        completion_time = process["completion_time"]
 
         if completion_time is not None:
 
-            steps.append({
-                "step": len(steps) + 1,
+            completion_steps.append({
                 "time": completion_time,
-                "type": "PROCESS_COMPLETION",
-                "title": (
-                    f"{process['id']} completes"
-                ),
-                "process": process["id"],
-                "explanation": (
-                    f"{process['id']} has completed its "
-                    f"required CPU burst. Its completion "
-                    f"time is {completion_time}."
-                )
+                "process": process
             })
 
+    completion_steps.sort(
+        key=lambda item: (
+            item["time"],
+            item["process"]["id"]
+        )
+    )
+
+    for item in completion_steps:
+
+        process = item["process"]
+
+        add_step(
+            item["time"],
+            "PROCESS_COMPLETION",
+            f"{process['id']} completes",
+            process["id"],
+            (
+                f"{process['id']} has finished its "
+                f"required CPU work. "
+                f"Its burst time was "
+                f"{process['burst_time']} units, "
+                f"and it completed at time "
+                f"{process['completion_time']}."
+            )
+        )
+
     # --------------------------------------------------
-    # SORT BY TIME
+    # SORT + RENUMBER
     # --------------------------------------------------
 
     steps.sort(
@@ -559,8 +600,10 @@ def generate_solution_steps(algorithm, processes, gantt_chart):
         )
     )
 
-    # Renumber steps
-    for index, step in enumerate(steps, start=1):
-        step["step"] = index
+    for number, step in enumerate(
+        steps,
+        start=1
+    ):
+        step["step"] = number
 
     return steps

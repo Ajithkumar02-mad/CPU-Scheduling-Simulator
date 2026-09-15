@@ -4,6 +4,7 @@ import GanttChart from "../components/GanttChart";
 import ResultsTable from "../components/ResultsTable";
 import PerformanceCharts from "../components/PerformanceCharts";
 import SimulationAnimation from "../components/SimulationAnimation";
+import SolutionExplanation from "../components/SolutionExplanation";
 import { simulateScheduling } from "../services/api";
 
 function Simulator() {
@@ -722,6 +723,10 @@ function Simulator() {
 
             <PerformanceCharts
                 processes={result.processes}
+            />
+            
+            <SolutionExplanation
+                steps={result.solution_steps}
             />
 
         </div>

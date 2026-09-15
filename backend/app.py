@@ -90,7 +90,7 @@ def simulate():
         # Generate detailed, problem-specific explanation
         solution_steps = generate_solution_steps(
             algorithm,
-            result["processes"],
+            data["processes"],
             result["gantt_chart"]
         )
 

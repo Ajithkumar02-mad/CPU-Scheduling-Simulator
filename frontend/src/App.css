@@ -917,35 +917,37 @@
 }
 
 
-/* ============================================================
+/* =========================================================
    GANTT TIME SCALE
-   ============================================================ */
+   ========================================================= */
 
 .gantt-scale {
     display: flex;
-
+    width: 100%;
+    margin-top: 10px;
+    min-height: 24px;
     position: relative;
-
-    min-width: 600px;
-
-    margin-top: 7px;
-
-    color: var(--text-muted);
-
-    font-size: 10px;
 }
 
 .gantt-scale span {
-    position: relative;
-
     display: block;
-
+    flex-shrink: 0;
     text-align: left;
+
+    color: var(--muted-text);
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+
+    white-space: nowrap;
 }
 
-.gantt-scale span:last-child {
-    margin-left: -3px;
+.gantt-scale .gantt-end-time {
+    width: auto !important;
+    margin-left: 0;
     text-align: right;
+    transform: translateX(-100%);
 }
 
 /* ============================================================
@@ -1483,4 +1485,1281 @@
 
     font-size: 12px;
     line-height: 1.6;
+}
+
+/* =====================================================
+   SOLUTION EXPLANATION
+   ===================================================== */
+
+.solution-card {
+    margin-top: 24px;
+    padding: 28px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    background: var(--card-bg);
+    box-shadow: var(--card-shadow);
+}
+
+.solution-subtitle {
+    margin: 6px 0 0;
+    color: var(--muted-text);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.solution-count {
+    padding: 8px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 999px;
+    color: var(--accent-color);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   TIMELINE
+   ===================================================== */
+
+.solution-timeline {
+    position: relative;
+    margin-top: 30px;
+}
+
+.solution-timeline::before {
+    content: "";
+    position: absolute;
+
+    top: 12px;
+    bottom: 12px;
+    left: 21px;
+
+    width: 2px;
+
+    background: var(--border-color);
+}
+
+
+/* =====================================================
+   INDIVIDUAL STEP
+   ===================================================== */
+
+.solution-step {
+    position: relative;
+
+    display: flex;
+
+    gap: 18px;
+
+    padding-bottom: 26px;
+}
+
+.solution-step:last-child {
+    padding-bottom: 0;
+}
+
+
+/* =====================================================
+   MARKER
+   ===================================================== */
+
+.solution-marker {
+    position: relative;
+
+    z-index: 2;
+
+    flex: 0 0 42px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.solution-marker span {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+
+    background: var(--card-bg);
+
+    color: var(--accent-color);
+
+    font-size: 15px;
+    font-weight: 800;
+}
+
+
+/* =====================================================
+   STEP CONTENT
+   ===================================================== */
+
+.solution-content {
+    flex: 1;
+
+    min-width: 0;
+
+    padding: 20px 22px;
+
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+
+    background: var(--surface-bg);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.solution-content:hover {
+    transform: translateY(-2px);
+
+    border-color: var(--accent-color);
+}
+
+
+/* =====================================================
+   STEP HEADER
+   ===================================================== */
+
+.solution-step-top {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 10px;
+}
+
+.solution-step-number {
+    color: var(--accent-color);
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+}
+
+.solution-time {
+    padding: 5px 10px;
+
+    border-radius: 8px;
+
+    background: var(--accent-soft);
+
+    color: var(--accent-color);
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   STEP TITLE
+   ===================================================== */
+
+.solution-content h3 {
+    margin: 0 0 16px;
+
+    color: var(--heading-text);
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   WHY SECTION
+   ===================================================== */
+
+.solution-reason {
+    padding: 14px 16px;
+
+    border-radius: 12px;
+
+    background: var(--card-bg);
+}
+
+.solution-reason-label {
+    margin: 0 0 7px;
+
+    color: var(--accent-color);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 1.3px;
+}
+
+.solution-explanation {
+    margin: 0;
+
+    color: var(--body-text);
+
+    font-size: 14px;
+    line-height: 1.75;
+
+    white-space: pre-line;
+}
+
+
+/* =====================================================
+   EVENT TYPES
+   ===================================================== */
+
+/* Preemption */
+
+.solution-step.preemption .solution-marker span {
+    color: #f59e0b;
+}
+
+.solution-step.preemption .solution-content {
+    border-color: rgba(245, 158, 11, 0.35);
+}
+
+
+/* CPU Idle */
+
+.solution-step.idle .solution-marker span {
+    color: var(--muted-text);
+}
+
+.solution-step.idle .solution-content {
+    opacity: 0.9;
+}
+
+
+/* Completion */
+
+.solution-step.completion .solution-marker span {
+    color: #22c55e;
+}
+
+.solution-step.completion .solution-content {
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+
+/* Context Switch */
+
+.solution-step.switch .solution-marker span {
+    color: #60a5fa;
+}
+
+
+/* Introduction */
+
+.solution-step.introduction .solution-marker span {
+    color: var(--accent-color);
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 700px) {
+
+    .solution-card {
+        padding: 20px;
+    }
+
+    .solution-step {
+        gap: 12px;
+    }
+
+    .solution-marker {
+        flex-basis: 34px;
+    }
+
+    .solution-marker span {
+        width: 34px;
+        height: 34px;
+
+        font-size: 12px;
+    }
+
+    .solution-timeline::before {
+        left: 16px;
+    }
+
+    .solution-content {
+        padding: 16px;
+    }
+
+    .solution-step-top {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 6px;
+    }
+
+    .solution-content h3 {
+        font-size: 16px;
+    }
+
+    .solution-explanation {
+        font-size: 13px;
+        line-height: 1.65;
+    }
+}
+
+/* =====================================================
+   TYPOGRAPHY & VISIBILITY UPGRADE
+   ===================================================== */
+
+
+/* =====================================================
+   GANTT CHART
+   ===================================================== */
+
+.gantt-chart {
+    overflow-x: auto;
+}
+
+.gantt-segment {
+    min-height: 105px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px;
+}
+
+.gantt-segment .process-name,
+.gantt-segment h3,
+.gantt-segment strong {
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.gantt-segment .time-range,
+.gantt-segment .gantt-time,
+.gantt-segment small {
+    margin-top: 7px;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.gantt-segment .duration,
+.gantt-segment .gantt-duration {
+    margin-top: 5px;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   GANTT AXIS / TIME NUMBERS
+   ===================================================== */
+
+.gantt-axis,
+.gantt-timeline {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.gantt-axis span,
+.gantt-timeline span {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   PROCESS RESULTS TABLE
+   ===================================================== */
+
+table {
+    font-size: 14px;
+}
+
+table th {
+    padding: 14px 12px;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+}
+
+table td {
+    padding: 16px 12px;
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+table td:first-child {
+    font-size: 15px;
+    font-weight: 800;
+}
+
+table td .status,
+table td span {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   METRICS
+   ===================================================== */
+
+.metric-value {
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.metric-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+}
+
+
+/* =====================================================
+   SOLUTION EXPLANATION
+   ===================================================== */
+
+.solution-content {
+    padding: 22px 24px;
+}
+
+.solution-step-number {
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.solution-time {
+    font-size: 13px;
+    font-weight: 700;
+
+    padding: 6px 11px;
+}
+
+.solution-content h3 {
+    font-size: 19px;
+    line-height: 1.4;
+}
+
+.solution-reason-label {
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.solution-explanation {
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+
+/* =====================================================
+   SECTION HEADINGS
+   ===================================================== */
+
+.section-header h2 {
+    font-size: 22px;
+    line-height: 1.3;
+}
+
+.section-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+
+/* =====================================================
+   RESULT HEADINGS
+   ===================================================== */
+
+.simulation-result h1,
+.simulation-result h2 {
+    line-height: 1.3;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 700px) {
+
+    .gantt-segment {
+        min-height: 90px;
+        padding: 8px;
+    }
+
+    .gantt-segment .process-name,
+    .gantt-segment h3,
+    .gantt-segment strong {
+        font-size: 15px;
+    }
+
+    .gantt-segment .time-range,
+    .gantt-segment .gantt-time,
+    .gantt-segment small {
+        font-size: 11px;
+    }
+
+    table th {
+        font-size: 10px;
+        padding: 11px 8px;
+    }
+
+    table td {
+        font-size: 12px;
+        padding: 13px 8px;
+    }
+
+    table td:first-child {
+        font-size: 13px;
+    }
+
+    .solution-content {
+        padding: 17px;
+    }
+
+    .solution-content h3 {
+        font-size: 17px;
+    }
+
+    .solution-explanation {
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .metric-value {
+        font-size: 24px;
+    }
+}
+
+/* =====================================================
+   LIGHT MODE — CONTRAST FIX
+   ===================================================== */
+
+/*
+   IMPORTANT:
+   Light-mode styles are scoped ONLY to
+   .simulator-page.light
+
+   Dark mode will NOT be affected.
+*/
+
+.simulator-page.light {
+
+    --heading-text: #0f172a;
+    --body-text: #1e293b;
+    --muted-text: #475569;
+
+    --border-color: #cbd5e1;
+
+    --card-bg: #ffffff;
+    --surface-bg: #f8fafc;
+
+    --accent-color: #0f766e;
+    --accent-soft: #ccfbf1;
+
+    --card-shadow:
+        0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+
+/* =====================================================
+   GENERAL TEXT
+   ===================================================== */
+
+.simulator-page.light h1,
+.simulator-page.light h2,
+.simulator-page.light h3,
+.simulator-page.light h4 {
+    color: #0f172a;
+}
+
+.simulator-page.light p {
+    color: #1e293b;
+}
+
+.simulator-page.light .muted,
+.simulator-page.light .section-label,
+.simulator-page.light .result-label {
+    color: #475569;
+}
+
+
+/* =====================================================
+   HERO
+   ===================================================== */
+
+.simulator-page.light .eyebrow {
+    color: #475569;
+}
+
+.simulator-page.light .hero-description {
+    color: #334155;
+}
+
+.simulator-page.light .app-brand {
+    color: #334155;
+}
+
+
+/* =====================================================
+   CONFIGURATION
+   ===================================================== */
+
+.simulator-page.light label {
+    color: #334155;
+}
+
+.simulator-page.light input,
+.simulator-page.light select {
+    color: #0f172a;
+
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+}
+
+.simulator-page.light input::placeholder {
+    color: #64748b;
+}
+
+.simulator-page.light select option {
+    color: #0f172a;
+    background: #ffffff;
+}
+
+
+/* =====================================================
+   ALGORITHM INFORMATION
+   ===================================================== */
+
+.simulator-page.light .algorithm-info {
+    color: #1e293b;
+
+    background: #f0fdfa;
+
+    border-color: #5eead4;
+}
+
+.simulator-page.light .algorithm-info strong {
+    color: #0f766e;
+}
+
+.simulator-page.light .algorithm-info p {
+    color: #334155;
+}
+
+
+/* =====================================================
+   PROCESS TABLE
+   ===================================================== */
+
+.simulator-page.light .process-table,
+.simulator-page.light .results-table {
+    color: #0f172a;
+
+    border-color: #cbd5e1;
+}
+
+.simulator-page.light table th {
+    color: #334155;
+
+    background: #f0fdfa;
+
+    border-color: #cbd5e1;
+}
+
+.simulator-page.light table td {
+    color: #1e293b;
+
+    border-color: #cbd5e1;
+}
+
+.simulator-page.light table td:first-child {
+    color: #0f766e;
+
+    font-weight: 800;
+}
+
+
+/* Process ID badges */
+
+.simulator-page.light .process-id {
+    color: #0f766e;
+    background: #ecfdf5;
+}
+
+
+/* =====================================================
+   GANTT CHART
+   ===================================================== */
+
+.simulator-page.light .gantt-chart {
+    color: #0f172a;
+}
+
+.simulator-page.light .gantt-segment {
+    color: #0f172a;
+
+    border-color: #ffffff;
+}
+
+.simulator-page.light .gantt-segment strong,
+.simulator-page.light .gantt-segment h3,
+.simulator-page.light .gantt-segment .process-name {
+    color: #0f172a;
+}
+
+.simulator-page.light .gantt-segment small,
+.simulator-page.light .gantt-segment .time-range,
+.simulator-page.light .gantt-segment .gantt-time {
+    color: #334155;
+}
+
+.simulator-page.light .gantt-segment .duration,
+.simulator-page.light .gantt-segment .gantt-duration {
+    color: #475569;
+}
+
+
+/* Gantt time axis */
+
+.simulator-page.light .gantt-axis,
+.simulator-page.light .gantt-timeline {
+    color: #334155;
+}
+
+.simulator-page.light .gantt-axis span,
+.simulator-page.light .gantt-timeline span {
+    color: #334155;
+}
+
+
+/* =====================================================
+   LIVE SIMULATION
+   ===================================================== */
+
+.simulator-page.light .cpu-card,
+.simulator-page.light .ready-processes {
+    color: #0f172a;
+
+    background: #ffffff;
+
+    border-color: #cbd5e1;
+}
+
+.simulator-page.light .cpu-card h3,
+.simulator-page.light .ready-processes h3 {
+    color: #0f172a;
+}
+
+.simulator-page.light .ready-processes p {
+    color: #475569;
+}
+
+
+/* =====================================================
+   SCHEDULER DECISION
+   ===================================================== */
+
+.simulator-page.light .scheduler-decision {
+    color: #1e293b;
+
+    background: #f0fdfa;
+
+    border-color: #5eead4;
+}
+
+.simulator-page.light .scheduler-decision h3 {
+    color: #0f172a;
+}
+
+.simulator-page.light .scheduler-decision p {
+    color: #334155;
+}
+
+
+/* =====================================================
+   METRICS
+   ===================================================== */
+
+.simulator-page.light .metric-card {
+    background: #ffffff;
+
+    border-color: #cbd5e1;
+}
+
+.simulator-page.light .metric-card span {
+    color: #475569;
+}
+
+.simulator-page.light .metric-card strong {
+    color: #0f766e;
+}
+
+
+/* =====================================================
+   PERFORMANCE CHARTS
+   ===================================================== */
+
+.simulator-page.light .chart-card {
+    background: #ffffff;
+
+    border-color: #cbd5e1;
+}
+
+.simulator-page.light .chart-card h3 {
+    color: #0f172a;
+}
+
+.simulator-page.light .chart-card p {
+    color: #475569;
+}
+
+
+/* =====================================================
+   SOLUTION EXPLANATION
+   ===================================================== */
+
+.simulator-page.light .solution-card {
+    background: #ffffff;
+
+    border-color: #cbd5e1;
+}
+
+.simulator-page.light .solution-subtitle {
+    color: #475569;
+}
+
+.simulator-page.light .solution-count {
+    color: #0f766e;
+
+    background: #f0fdfa;
+
+    border-color: #99f6e4;
+}
+
+
+/* Timeline */
+
+.simulator-page.light .solution-timeline::before {
+    background: #cbd5e1;
+}
+
+
+/* Step card */
+
+.simulator-page.light .solution-content {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+}
+
+.simulator-page.light .solution-content:hover {
+    border-color: #14b8a6;
+}
+
+
+/* Step number */
+
+.simulator-page.light .solution-step-number {
+    color: #0f766e;
+}
+
+
+/* Time */
+
+.simulator-page.light .solution-time {
+    color: #0f766e;
+
+    background: #ccfbf1;
+}
+
+
+/* Title */
+
+.simulator-page.light .solution-content h3 {
+    color: #0f172a;
+}
+
+
+/* WHY box */
+
+.simulator-page.light .solution-reason {
+    background: #ffffff;
+
+    border-color: #e2e8f0;
+}
+
+.simulator-page.light .solution-reason-label {
+    color: #0f766e;
+}
+
+.simulator-page.light .solution-explanation {
+    color: #1e293b;
+}
+
+
+/* =====================================================
+   EVENT COLORS
+   ===================================================== */
+
+.simulator-page.light
+.solution-step.preemption
+.solution-marker span {
+    color: #b45309;
+}
+
+.simulator-page.light
+.solution-step.preemption
+.solution-content {
+    border-color: #fbbf24;
+}
+
+.simulator-page.light
+.solution-step.idle
+.solution-marker span {
+    color: #64748b;
+}
+
+.simulator-page.light
+.solution-step.completion
+.solution-marker span {
+    color: #15803d;
+}
+
+.simulator-page.light
+.solution-step.completion
+.solution-content {
+    border-color: #86efac;
+}
+
+.simulator-page.light
+.solution-step.switch
+.solution-marker span {
+    color: #2563eb;
+}
+
+
+/* =====================================================
+   BUTTONS
+   ===================================================== */
+
+.simulator-page.light .theme-toggle,
+.simulator-page.light .secondary-button {
+    color: #0f172a;
+
+    border-color: #cbd5e1;
+
+    background: #ffffff;
+}
+
+.simulator-page.light .theme-toggle:hover,
+.simulator-page.light .secondary-button:hover {
+    color: #0f766e;
+
+    border-color: #14b8a6;
+}
+
+.simulator-page.light .danger-outline {
+    color: #b91c1c;
+
+    border-color: #fca5a5;
+}
+
+.simulator-page.light .danger-outline:hover {
+    color: #991b1b;
+
+    border-color: #ef4444;
+}
+
+
+/* =====================================================
+   STATUS
+   ===================================================== */
+
+.simulator-page.light .status-badge {
+    color: #047857;
+
+    background: #ffffff;
+
+    border-color: #cbd5e1;
+}
+
+.simulator-page.light .status-dot {
+    background: #14b8a6;
+}
+
+.simulator-page.light .result-success {
+    color: #047857;
+
+    background: #ecfdf5;
+
+    border-color: #6ee7b7;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 700px) {
+
+    .simulator-page.light table th {
+        color: #334155;
+    }
+
+    .simulator-page.light table td {
+        color: #1e293b;
+    }
+
+    .simulator-page.light .solution-explanation {
+        color: #1e293b;
+    }
+}
+
+/* =====================================================
+   PROCESS RESULTS — LIGHT MODE VISIBILITY
+   ===================================================== */
+
+.simulator-page.light .results-table {
+    color: #0f172a;
+}
+
+/* Table header */
+.simulator-page.light .results-table th {
+    color: #334155 !important;
+    background: #f0fdfa;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+/* ALL table values */
+.simulator-page.light .results-table td {
+    color: #0f172a !important;
+    font-size: 14px;
+    font-weight: 600;
+    background: #ffffff;
+}
+
+/* Alternate row */
+.simulator-page.light .results-table tbody tr:nth-child(even) td {
+    background: #f8fafc;
+}
+
+/* Process name */
+.simulator-page.light .results-table td:first-child {
+    color: #0f766e !important;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+/* Calculated values */
+.simulator-page.light .results-table td:nth-child(5),
+.simulator-page.light .results-table td:nth-child(6),
+.simulator-page.light .results-table td:nth-child(7),
+.simulator-page.light .results-table td:nth-child(8) {
+    color: #0f766e !important;
+    font-weight: 800;
+}
+
+/* Arrival / Burst / Priority */
+.simulator-page.light .results-table td:nth-child(2),
+.simulator-page.light .results-table td:nth-child(3),
+.simulator-page.light .results-table td:nth-child(4) {
+    color: #0f172a !important;
+    font-weight: 700;
+}
+
+/* Table borders */
+.simulator-page.light .results-table th,
+.simulator-page.light .results-table td {
+    border-color: #cbd5e1 !important;
+}
+
+/* =====================================================
+   TERMINATED STATUS
+   ===================================================== */
+
+.simulator-page.light .results-table .status,
+.simulator-page.light .results-table .status-badge {
+    color: #047857 !important;
+
+    background: #ecfdf5;
+
+    border: 1px solid #6ee7b7;
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+
+/* =====================================================
+   TABLE HOVER
+   ===================================================== */
+
+.simulator-page.light .results-table tbody tr:hover td {
+    background: #f0fdfa;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 700px) {
+
+    .simulator-page.light .results-table th {
+        font-size: 10px;
+    }
+
+    .simulator-page.light .results-table td {
+        font-size: 13px;
+    }
+
+    .simulator-page.light .results-table td:first-child {
+        font-size: 14px;
+    }
+}
+
+/* =====================================================
+   GANTT CHART — TIME VALUES VISIBILITY
+   ===================================================== */
+
+.gantt-axis,
+.gantt-timeline {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+
+.gantt-axis span,
+.gantt-timeline span {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+
+
+/* Light Mode */
+.simulator-page.light .gantt-axis,
+.simulator-page.light .gantt-timeline,
+.simulator-page.light .gantt-axis span,
+.simulator-page.light .gantt-timeline span {
+    color: #334155 !important;
+}
+
+
+/* Dark Mode */
+.simulator-page.dark .gantt-axis,
+.simulator-page.dark .gantt-timeline,
+.simulator-page.dark .gantt-axis span,
+.simulator-page.dark .gantt-timeline span {
+    color: #cbd5e1 !important;
+}
+
+
+/* Mobile */
+@media (max-width: 700px) {
+
+    .gantt-axis,
+    .gantt-timeline,
+    .gantt-axis span,
+    .gantt-timeline span {
+        font-size: 13px !important;
+    }
+}
+
+/* =====================================================
+   FINAL GANTT SCALE VISIBILITY FIX
+   ===================================================== */
+
+.gantt-scale {
+    display: flex;
+    width: 100%;
+    margin-top: 10px;
+    min-height: 28px;
+
+    color: #f8fafc !important;
+}
+
+.gantt-scale span {
+    display: block;
+    flex-shrink: 0;
+
+    color: #f8fafc !important;
+
+    font-size: 14px !important;
+    font-weight: 800 !important;
+
+    line-height: 1.5;
+
+    white-space: nowrap;
+}
+
+
+/* Final number on the right */
+
+.gantt-scale .gantt-end-time {
+    width: auto !important;
+
+    margin-left: 0;
+
+    color: #f8fafc !important;
+
+    font-size: 14px !important;
+    font-weight: 800 !important;
+
+    text-align: right;
+
+    transform: translateX(-100%);
+}
+
+
+/* =====================================================
+   LIGHT MODE
+   ===================================================== */
+
+.simulator-page.light .gantt-scale,
+.simulator-page.light .gantt-scale span,
+.simulator-page.light .gantt-scale .gantt-end-time {
+    color: #334155 !important;
+}
+
+
+/* =====================================================
+   DARK MODE
+   ===================================================== */
+
+.simulator-page.dark .gantt-scale,
+.simulator-page.dark .gantt-scale span,
+.simulator-page.dark .gantt-scale .gantt-end-time {
+    color: #64748b  !important;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 700px) {
+
+    .gantt-scale span,
+    .gantt-scale .gantt-end-time {
+        font-size: 13px !important;
+    }
 }

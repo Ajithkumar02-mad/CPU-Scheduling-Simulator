@@ -71,7 +71,8 @@ function GanttChart({ ganttChart }) {
                     </span>
                 ))}
 
-                <span>
+                {/* Final time */}
+                <span className="gantt-end-time">
                     {endTime}
                 </span>
 
