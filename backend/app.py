@@ -4,6 +4,7 @@ from flask_cors import CORS
 from algorithms.registry import get_scheduler, SCHEDULERS
 from models.process import Process
 from utils.validators import validate_process_input
+from utils.explanation import generate_solution_steps
 
 
 app = Flask(__name__)
@@ -85,6 +86,16 @@ def simulate():
 
         else:
             result = scheduler(processes)
+
+        # Generate detailed, problem-specific explanation
+        solution_steps = generate_solution_steps(
+            algorithm,
+            result["processes"],
+            result["gantt_chart"]
+        )
+
+        # Add explanation steps to simulation result
+        result["solution_steps"] = solution_steps
 
         return jsonify(result), 200
 
