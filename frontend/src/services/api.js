@@ -1,17 +1,15 @@
 import axios from "axios";
 
-
 // ============================================================
 // API CONFIGURATION
 // ============================================================
 
 const API = axios.create({
-    baseURL: "http://127.0.0.1:5000",
+    baseURL: "https://cpu-scheduling-api.onrender.com",
     headers: {
         "Content-Type": "application/json",
     },
 });
-
 
 // ============================================================
 // HEALTH CHECK
@@ -23,7 +21,6 @@ export const checkHealth = async () => {
     return response.data;
 };
 
-
 // ============================================================
 // GET AVAILABLE ALGORITHMS
 // ============================================================
@@ -33,7 +30,6 @@ export const getAlgorithms = async () => {
 
     return response.data;
 };
-
 
 // ============================================================
 // RUN CPU SCHEDULING SIMULATION
@@ -47,7 +43,6 @@ export const simulateScheduling = async (simulationData) => {
 
     return response.data;
 };
-
 
 // ============================================================
 // EXPORT API INSTANCE
