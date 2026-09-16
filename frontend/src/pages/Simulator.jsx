@@ -6,6 +6,7 @@ import PerformanceCharts from "../components/PerformanceCharts";
 import SimulationAnimation from "../components/SimulationAnimation";
 import SolutionExplanation from "../components/SolutionExplanation";
 import { simulateScheduling } from "../services/api";
+import AlgorithmTheory from "../components/AlgorithmTheory";
 
 function Simulator() {
     const [algorithm, setAlgorithm] = useState("FCFS");
@@ -285,6 +286,16 @@ function Simulator() {
                         and performance metrics.
                     </p>
 
+                    <div className="hero-navigation">
+                        <a href="#fcfs-theory">FCFS</a>
+                        <a href="#sjf-theory">SJF</a>
+                        <a href="#srtf-theory">SRTF</a>
+                        <a href="#round-robin-theory">Round Robin</a>
+                        <a href="#priority-np-theory">Priority NP</a>
+                        <a href="#priority-p-theory">Priority P</a>
+                        <a href="#simulator">▶ Simulator</a>
+                    </div>
+
                 </div>
 
                 <div className="status-badge">
@@ -302,7 +313,7 @@ function Simulator() {
                 ALGORITHM CONFIGURATION
             ================================================== */}
 
-            <section className="configuration-card">
+            <section className="configuration-card" id="simulator">
 
                 <div className="section-header">
 
@@ -734,7 +745,7 @@ function Simulator() {
     </section>
 
 )}
-
+        <AlgorithmTheory />
         </main>
     );
 }

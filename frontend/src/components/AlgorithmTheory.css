@@ -1,0 +1,606 @@
+/* =========================================================
+   THEORY SECTION
+========================================================= */
+
+.theory-section {
+    width: min(1200px, calc(100% - 40px));
+    margin: 80px auto 100px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.theory-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.theory-header h2 {
+    margin: 8px 0 12px;
+    font-size: clamp(30px, 4vw, 46px);
+    letter-spacing: -1px;
+}
+
+.theory-header > p:last-child {
+    max-width: 720px;
+    margin: auto;
+    line-height: 1.7;
+    opacity: 0.75;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.theory-navigation {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 45px;
+    position: sticky;
+    top: 15px;
+    z-index: 20;
+    padding: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 16px;
+    backdrop-filter: blur(16px);
+    background: rgba(10, 15, 25, 0.82);
+}
+
+.theory-nav-button {
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    background: transparent;
+    color: inherit;
+    padding: 10px 17px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.theory-nav-button:hover {
+    transform: translateY(-2px);
+    border-color: #59e0d0;
+    background: rgba(89, 224, 208, 0.08);
+}
+
+
+/* =========================================================
+   THEORY CARD
+========================================================= */
+
+.theory-card {
+    scroll-margin-top: 100px;
+    margin-bottom: 50px;
+    padding: clamp(25px, 4vw, 50px);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 24px;
+    background: rgba(15, 23, 42, 0.55);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.16);
+}
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.theory-card-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.theory-number {
+    min-width: 65px;
+    height: 65px;
+    display: grid;
+    place-items: center;
+    border-radius: 18px;
+    background: rgba(89, 224, 208, 0.1);
+    border: 1px solid rgba(89, 224, 208, 0.3);
+    color: #59e0d0;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.theory-card h3 {
+    margin: 4px 0;
+    font-size: clamp(25px, 3vw, 36px);
+}
+
+.theory-label,
+.section-label {
+    color: #59e0d0;
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: 800;
+}
+
+.theory-subtitle {
+    margin-top: 7px;
+    opacity: 0.7;
+}
+
+
+/* =========================================================
+   GENERAL BLOCK
+========================================================= */
+
+.theory-block {
+    margin-top: 38px;
+}
+
+.theory-block h4 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    font-size: 21px;
+}
+
+.theory-block h4 span {
+    color: #59e0d0;
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+
+.theory-text {
+    white-space: pre-line;
+    line-height: 1.85;
+    opacity: 0.82;
+}
+
+
+/* =========================================================
+   HIGHLIGHT
+========================================================= */
+
+.theory-highlight {
+    display: flex;
+    gap: 18px;
+    margin-top: 30px;
+    padding: 22px;
+    border-radius: 16px;
+    border-left: 3px solid #59e0d0;
+    background: rgba(89, 224, 208, 0.06);
+}
+
+.highlight-icon {
+    font-size: 25px;
+}
+
+.theory-highlight h4 {
+    margin: 0 0 8px;
+}
+
+.theory-highlight p {
+    margin: 0;
+    line-height: 1.7;
+    opacity: 0.8;
+    white-space: pre-line;
+}
+
+
+/* =========================================================
+   HOW IT WORKS
+========================================================= */
+
+.step-list {
+    display: grid;
+    gap: 12px;
+}
+
+.theory-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 15px 17px;
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 12px;
+    background: rgba(148, 163, 184, 0.035);
+}
+
+.step-number {
+    min-width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(89, 224, 208, 0.12);
+    color: #59e0d0;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.theory-step p {
+    margin: 3px 0 0;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   INFO GRID
+========================================================= */
+
+.theory-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 38px;
+}
+
+.info-panel {
+    padding: 22px;
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 16px;
+    background: rgba(148, 163, 184, 0.035);
+}
+
+.info-panel h4 {
+    margin: 0 0 16px;
+    font-size: 17px;
+}
+
+.info-panel ul {
+    padding-left: 19px;
+    margin: 0;
+}
+
+.info-panel li {
+    margin-bottom: 10px;
+    line-height: 1.55;
+    opacity: 0.78;
+}
+
+
+/* =========================================================
+   FORMULAS
+========================================================= */
+
+.formula-list {
+    display: grid;
+    gap: 10px;
+}
+
+.formula-item {
+    padding: 15px 18px;
+    border-radius: 11px;
+    background: rgba(0, 0, 0, 0.16);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    font-family: "Courier New", monospace;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   EXAMPLE SECTION
+========================================================= */
+
+.example-section {
+    margin-top: 45px;
+    padding: 28px;
+    border-radius: 20px;
+    border: 1px solid rgba(89, 224, 208, 0.18);
+    background: rgba(89, 224, 208, 0.025);
+}
+
+.example-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.example-header h4 {
+    margin: 5px 0 0;
+    font-size: 22px;
+}
+
+.quantum-badge {
+    padding: 9px 13px;
+    border-radius: 9px;
+    background: rgba(89, 224, 208, 0.1);
+    color: #59e0d0;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   NOTE
+========================================================= */
+
+.example-note {
+    margin-bottom: 22px;
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(245, 158, 11, 0.08);
+    border-left: 3px solid #f59e0b;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.example-table-wrapper {
+    overflow-x: auto;
+}
+
+.example-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.example-table th,
+.example-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.example-table th {
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    opacity: 0.65;
+}
+
+.example-table td {
+    font-size: 15px;
+}
+
+.example-table tbody tr:hover {
+    background: rgba(89, 224, 208, 0.035);
+}
+
+
+/* =========================================================
+   SOLUTION
+========================================================= */
+
+.solution-area,
+.example-gantt,
+.calculation-area {
+    margin-top: 32px;
+}
+
+.solution-area h5,
+.example-gantt h5,
+.calculation-area h5 {
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.solution-steps {
+    display: grid;
+    gap: 10px;
+}
+
+.solution-step {
+    display: flex;
+    gap: 15px;
+    padding: 16px;
+    border-radius: 11px;
+    background: rgba(148, 163, 184, 0.04);
+    border: 1px solid rgba(148, 163, 184, 0.11);
+}
+
+.solution-step-number {
+    min-width: 65px;
+    color: #59e0d0;
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.solution-step p {
+    margin: 0;
+    line-height: 1.65;
+}
+
+
+/* =========================================================
+   EXAMPLE GANTT
+========================================================= */
+
+.gantt-example-box {
+    overflow-x: auto;
+    padding: 20px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.18);
+    border: 1px solid rgba(148, 163, 184, 0.13);
+    font-family: "Courier New", monospace;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   CALCULATIONS
+========================================================= */
+
+.calculation-list {
+    display: grid;
+    gap: 9px;
+}
+
+.calculation-item {
+    display: flex;
+    gap: 13px;
+    align-items: flex-start;
+}
+
+.calculation-item span {
+    min-width: 25px;
+    height: 25px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(89, 224, 208, 0.1);
+    color: #59e0d0;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.calculation-item p {
+    margin: 3px 0 0;
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   EXAM TIPS
+========================================================= */
+
+.exam-tips {
+    margin-top: 35px;
+    padding: 22px;
+    border-radius: 16px;
+    background: rgba(89, 224, 208, 0.055);
+    border: 1px solid rgba(89, 224, 208, 0.15);
+}
+
+.exam-tips-title {
+    margin-bottom: 13px;
+    font-weight: 800;
+}
+
+.exam-tips ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.exam-tips li {
+    margin-bottom: 8px;
+    line-height: 1.6;
+    opacity: 0.8;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+========================================================= */
+
+.back-to-theory {
+    margin-top: 28px;
+    padding: 11px 16px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 10px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font-weight: 700;
+    transition: 0.2s ease;
+}
+
+.back-to-theory:hover {
+    border-color: #59e0d0;
+    color: #59e0d0;
+    transform: translateY(-2px);
+}
+
+
+/* =========================================================
+   LIGHT MODE
+========================================================= */
+
+.simulator-page.light .theory-navigation {
+    background: rgba(255, 255, 255, 0.88);
+}
+
+.simulator-page.light .theory-card {
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: 0 20px 55px rgba(15, 23, 42, 0.08);
+}
+
+.simulator-page.light .info-panel,
+.simulator-page.light .theory-step {
+    background: rgba(15, 23, 42, 0.025);
+}
+
+.simulator-page.light .formula-item,
+.simulator-page.light .gantt-example-box {
+    background: rgba(15, 23, 42, 0.035);
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 850px) {
+
+    .theory-section {
+        width: min(100% - 24px, 1200px);
+        margin-top: 60px;
+    }
+
+    .theory-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .theory-card {
+        padding: 24px 18px;
+    }
+
+    .example-section {
+        padding: 20px 15px;
+    }
+
+    .example-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .theory-navigation {
+        top: 8px;
+        justify-content: flex-start;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+    }
+
+    .theory-nav-button {
+        white-space: nowrap;
+    }
+
+}
+
+
+@media (max-width: 550px) {
+
+    .theory-card-header {
+        align-items: flex-start;
+    }
+
+    .theory-number {
+        min-width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        font-size: 16px;
+    }
+
+    .theory-card h3 {
+        font-size: 24px;
+    }
+
+    .solution-step {
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .solution-step-number {
+        min-width: auto;
+    }
+
+}

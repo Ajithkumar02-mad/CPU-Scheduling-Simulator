@@ -2763,3 +2763,51 @@ table td span {
         font-size: 13px !important;
     }
 }
+
+/* =========================================================
+   HERO NAVIGATION
+========================================================= */
+
+.hero-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 25px;
+}
+
+.hero-navigation a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.hero-navigation a:hover {
+    transform: translateY(-2px);
+    border-color: #59e0d0;
+    background: rgba(89, 224, 208, 0.08);
+    color: #59e0d0;
+}
+
+@media (max-width: 700px) {
+
+    .hero-navigation {
+        gap: 7px;
+    }
+
+    .hero-navigation a {
+        padding: 9px 12px;
+        font-size: 12px;
+    }
+
+}
